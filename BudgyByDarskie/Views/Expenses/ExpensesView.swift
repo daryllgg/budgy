@@ -59,14 +59,6 @@ struct ExpensesView: View {
                             }
                         }
 
-                        if expenseVM.hasMoreData {
-                            ProgressView()
-                                .frame(maxWidth: .infinity)
-                                .onAppear {
-                                    guard let uid = authVM.uid else { return }
-                                    Task { await expenseVM.loadMore(uid: uid) }
-                                }
-                        }
                     }
                 }
             }

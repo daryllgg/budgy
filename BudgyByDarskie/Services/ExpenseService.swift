@@ -19,36 +19,6 @@ struct ExpenseService {
             }
     }
 
-    static func subscribeRecent(uid: String, year: Int, since: Date, onChange: @escaping ([Expense]) -> Void) -> ListenerRegistration {
-        col(uid)
-            .whereField("year", isEqualTo: year)
-            .whereField("date", isGreaterThan: Timestamp(date: since))
-            .order(by: "date", descending: true)
-            .addSnapshotListener { snapshot, error in
-                if let error { print("ExpenseService.subscribeRecent error: \(error)") }
-                guard let docs = snapshot?.documents else { return }
-                let expenses = docs.compactMap { try? $0.data(as: Expense.self) }
-                onChange(expenses)
-            }
-    }
-
-    static func fetchOlderPage(uid: String, year: Int, before: Date, lastDocument: DocumentSnapshot?, limit: Int = 20) async throws -> (expenses: [Expense], lastDoc: DocumentSnapshot?) {
-        var query = col(uid)
-            .whereField("year", isEqualTo: year)
-            .whereField("date", isLessThanOrEqualTo: Timestamp(date: before))
-            .order(by: "date", descending: true)
-            .limit(to: limit)
-
-        if let lastDocument {
-            query = query.start(afterDocument: lastDocument)
-        }
-
-        let snapshot = try await query.getDocuments()
-        let expenses = snapshot.documents.compactMap { try? $0.data(as: Expense.self) }
-        let lastDoc = snapshot.documents.last
-        return (expenses, lastDoc)
-    }
-
     @discardableResult
     static func add(uid: String, expense: Expense) async throws -> String {
         let walletRef = db.collection("users").document(uid).collection("wallets").document(expense.sourceId)

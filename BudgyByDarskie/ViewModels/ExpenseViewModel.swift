@@ -1,28 +1,13 @@
-import SwiftUI
+import Foundation
 import FirebaseFirestore
 
 @Observable
 class ExpenseViewModel {
-    var recentExpenses: [Expense] = []
-    var olderExpenses: [Expense] = []
+    var expenses: [Expense] = []
     var isLoading = true
-    var isLoadingMore = false
-    var hasMoreData = true
     var errorMessage: String?
 
     private var listener: ListenerRegistration?
-    private var lastDocument: DocumentSnapshot?
-    private var sinceDate: Date = Calendar.current.date(byAdding: .day, value: -2, to: Date())!
-    private var currentYear: Int = CURRENT_YEAR
-
-    var expenses: [Expense] {
-        let allIds = Set(recentExpenses.compactMap(\.id))
-        let dedupedOlder = olderExpenses.filter { expense in
-            guard let id = expense.id else { return true }
-            return !allIds.contains(id)
-        }
-        return (recentExpenses + dedupedOlder).sorted { $0.date > $1.date }
-    }
 
     var totalExpenses: Double { expenses.reduce(0) { $0 + $1.amount } }
 
@@ -34,44 +19,9 @@ class ExpenseViewModel {
     func subscribe(uid: String, year: Int = CURRENT_YEAR) {
         listener?.remove()
         isLoading = true
-        olderExpenses = []
-        lastDocument = nil
-        hasMoreData = true
-        currentYear = year
-        sinceDate = Calendar.current.date(byAdding: .day, value: -2, to: Date())!
-
-        listener = ExpenseService.subscribeRecent(uid: uid, year: year, since: sinceDate) { [weak self] expenses in
-            guard let self else { return }
-            withAnimation {
-                self.recentExpenses = expenses
-                self.isLoading = false
-            }
-        }
-    }
-
-    func loadMore(uid: String) async {
-        guard !isLoadingMore, hasMoreData else { return }
-        isLoadingMore = true
-
-        do {
-            let result = try await ExpenseService.fetchOlderPage(
-                uid: uid,
-                year: currentYear,
-                before: sinceDate,
-                lastDocument: lastDocument,
-                limit: 20
-            )
-            withAnimation {
-                olderExpenses.append(contentsOf: result.expenses)
-                lastDocument = result.lastDoc
-                if result.expenses.count < 20 {
-                    hasMoreData = false
-                }
-                isLoadingMore = false
-            }
-        } catch {
-            errorMessage = error.localizedDescription
-            isLoadingMore = false
+        listener = ExpenseService.subscribe(uid: uid, year: year) { [weak self] expenses in
+            self?.expenses = expenses
+            self?.isLoading = false
         }
     }
 

@@ -76,14 +76,6 @@ struct ActivityLogView: View {
                         }
                     }
 
-                    if logVM.hasMoreData {
-                        ProgressView()
-                            .frame(maxWidth: .infinity)
-                            .onAppear {
-                                guard let uid = authVM.uid else { return }
-                                Task { await logVM.loadMore(uid: uid) }
-                            }
-                    }
                 }
                 .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .automatic), prompt: "Search activity...")
                 .scrollContentBackground(.hidden)
