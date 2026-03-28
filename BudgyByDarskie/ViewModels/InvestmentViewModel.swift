@@ -11,11 +11,12 @@ class InvestmentViewModel {
     private var listener: ListenerRegistration?
     private var allListener: ListenerRegistration?
 
-    var totalInvestedPhp: Double { investments.reduce(0) { $0 + $1.amountPhp } }
-    var totalInvestedUsd: Double { investments.reduce(0) { $0 + $1.amountUsd } }
+    private var activeInvestments: [Investment] { investments.filter { $0.exited != true } }
+    var totalInvestedPhp: Double { activeInvestments.reduce(0) { $0 + $1.amountPhp } }
+    var totalInvestedUsd: Double { activeInvestments.reduce(0) { $0 + $1.amountUsd } }
 
     var portfolio: PortfolioSummary {
-        let stocks = allInvestments.filter { $0.investmentType == .stock && $0.stock == "VOO" }
+        let stocks = allInvestments.filter { $0.investmentType == .stock && $0.stock == "VOO" && $0.exited != true }
         let totalPhp = stocks.reduce(0) { $0 + $1.amountPhp }
         let totalUsd = stocks.reduce(0) { $0 + $1.amountUsd }
         let totalCostBasis = stocks.reduce(0) { $0 + ($1.buyPrice * $1.quantity) }
@@ -31,7 +32,7 @@ class InvestmentViewModel {
     }
 
     var bySource: [InvestmentSource: Double] {
-        Dictionary(grouping: investments, by: \.source)
+        Dictionary(grouping: activeInvestments, by: \.source)
             .mapValues { $0.reduce(0) { $0 + $1.amountPhp } }
     }
 
@@ -73,6 +74,10 @@ class InvestmentViewModel {
         } catch {
             errorMessage = error.localizedDescription
         }
+    }
+
+    func tpsl(uid: String, exit: InvestmentExit) {
+        InvestmentService.tpsl(uid: uid, exit: exit)
     }
 
     func delete(uid: String, investmentId: String, sourceId: String, amountPhp: Double) async {

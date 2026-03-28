@@ -10,6 +10,7 @@ struct InvestmentsView: View {
     @State private var showAddInvestment = false
     @State private var editingInvestment: Investment?
     @State private var deleteTarget: Investment?
+    @State private var tpslTarget: Investment?
 
     // Filters
     @State private var selectedTab: InvestmentTab = .all
@@ -68,9 +69,16 @@ struct InvestmentsView: View {
                                     LazyVStack(spacing: 8) {
                                         ForEach(filteredInvestments) { inv in
                                             InvestmentRow(investment: inv)
+                                                .opacity(inv.exited == true ? 0.5 : 1.0)
+                                                .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 20))
                                                 .contextMenu {
-                                                    Button { editingInvestment = inv } label: {
-                                                        Label("Edit", systemImage: "pencil")
+                                                    if inv.exited != true {
+                                                        Button { tpslTarget = inv } label: {
+                                                            Label("TP / SL", systemImage: "arrow.uturn.down.circle")
+                                                        }
+                                                        Button { editingInvestment = inv } label: {
+                                                            Label("Edit", systemImage: "pencil")
+                                                        }
                                                     }
                                                     Button(role: .destructive) { deleteTarget = inv } label: {
                                                         Label("Delete", systemImage: "trash")
@@ -132,6 +140,14 @@ struct InvestmentsView: View {
                     await investmentVM.update(uid: uid, investmentId: id, oldAmountPhp: inv.amountPhp, oldSourceId: inv.sourceId, investment: updated)
                     hapticSuccess()
                     toast.show("Investment updated")
+                }
+            }
+            .sheet(item: $tpslTarget) { inv in
+                TPSLFormSheet(investment: inv, wallets: walletVM.wallets) { exit in
+                    guard let uid = authVM.uid else { return }
+                    investmentVM.tpsl(uid: uid, exit: exit)
+                    hapticSuccess()
+                    toast.show(exit.profit >= 0 ? "TP recorded" : "SL recorded")
                 }
             }
             .alert("Delete Investment?", isPresented: Binding(get: { deleteTarget != nil }, set: { if !$0 { deleteTarget = nil } }), presenting: deleteTarget) { inv in

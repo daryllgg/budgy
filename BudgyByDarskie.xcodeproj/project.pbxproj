@@ -58,6 +58,7 @@
 		52E7A08AD7155AB1297AADF8 /* ProfitAllocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51BA9FF6914C958256228D0E /* ProfitAllocationService.swift */; };
 		562C87FDB3CEBFB001C29226 /* NetworkStatusLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E245B5FD00A5CF5EF2962 /* NetworkStatusLabel.swift */; };
 		5643DD12E98619FADF921000 /* DepositViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF90205AFA31840E3BF5EB06 /* DepositViewModel.swift */; };
+		57D4885A060FAD4C7BAC3760 /* InvestmentExit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5665806A2A8F0ACD464EBC2 /* InvestmentExit.swift */; };
 		5C2FEB71145C039BD1831CE9 /* WatchlistService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91F3E367F1993560ADB83655 /* WatchlistService.swift */; };
 		5DC114FCBCB581A5B4D3B7D5 /* AssetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1574B9FB4D6F3E671EE84E7A /* AssetService.swift */; };
 		5EC80073289507571B141706 /* WatchlistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A08B300CF5C3ADEF48D08F5 /* WatchlistView.swift */; };
@@ -73,11 +74,14 @@
 		761A9EB632ABF6D7EFDEE342 /* StockPriceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656BEF492506960E5254877A /* StockPriceViewModel.swift */; };
 		7968624250B9C93431D474EB /* SavingsBreakdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90FA3A7D2CBA176115E0BE1 /* SavingsBreakdown.swift */; };
 		7B0336F0A784B1C4EDFBFAE2 /* AssetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC48B67ACB68AD4DDC3A8534 /* AssetViewModel.swift */; };
+		80757FB7FA48AE1D86BA1D0F /* SoldFormSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57B8F2E46FD8960ACDDDF575 /* SoldFormSheet.swift */; };
 		83920D454E5D27A44670314C /* ReceivableRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CDA71726912ED9BC64FFCA /* ReceivableRow.swift */; };
 		84961AA656716FBA77BF8136 /* ProfitAllocationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C742490EC36E586733DF9C8 /* ProfitAllocationViewModel.swift */; };
 		85B4E0B250F39D509B6FDFB8 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 81F1B0C2255C35D93F4481D3 /* GoogleSignIn */; };
 		8A5F367073EE79E05567CA1A /* AddToWatchlistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D93145732A23E25BAC005D5 /* AddToWatchlistView.swift */; };
 		8BF6EE9748D9B57E90523A48 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E553B75319F158731583CCB7 /* LoginView.swift */; };
+		8FB86FF52D317BDE2636A4E4 /* BuySellDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34F0C7436FD7F37A8EA39DC6 /* BuySellDetailView.swift */; };
+		8FE92D37DF425E3418CD0FB5 /* TPSLFormSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A47C6BFCC44A4B97584A266F /* TPSLFormSheet.swift */; };
 		95FF6F0769179C184792BED4 /* ProfitAllocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9D862D2FDA6FF27C9AE4D26 /* ProfitAllocation.swift */; };
 		99732D03744B28A7C1ACE11E /* BuySellTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5022ACE97F20D750FA13EE1 /* BuySellTransaction.swift */; };
 		9A0342F1B76F760E83FF084E /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA30C9AC4CD2B6B985DC2CC /* Theme.swift */; };
@@ -92,7 +96,6 @@
 		AB41543C0DBA1A80AC8759F8 /* BudgyByDarskieApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6154545CC193ECED8B894612 /* BudgyByDarskieApp.swift */; };
 		B0A58D51D144EB2364C6840B /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40C5A2C254C68BCAE41FB59 /* EmptyStateView.swift */; };
 		BDDC9037F9566AB89354BF4A /* ExpenseFormSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4708E91975B8E95B21613B /* ExpenseFormSheet.swift */; };
-		RC5CA01E2A1B3D4F00A1B2C3 /* ReceiptScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = RC5CA01E2A1B3D4F00A1B2C4 /* ReceiptScannerView.swift */; };
 		C183037CCD96B3253AD0553D /* ActivityLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFFD9AB41F1E464CB13EC1B /* ActivityLogView.swift */; };
 		C40E1FCB7784F3CBC38FA721 /* PersonReceivablesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46AE004038C414E3D6AFAEA /* PersonReceivablesView.swift */; };
 		C838E6DD6067C0FBBDC613EF /* InvestmentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70F1BEE31367033EA9F9850E /* InvestmentService.swift */; };
@@ -124,6 +127,7 @@
 		FADE3C0EC4CAB3198228E2D4 /* FinanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920E36B298EFB04A38F18A80 /* FinanceView.swift */; };
 		FEC57C276B73A8E0DC657E32 /* Investment.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD3F4DAF1E750148522F8F0 /* Investment.swift */; };
 		FF8B79461A8A3F6172C66DDF /* ReceivablesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836CFC0A3E7856C541ED043D /* ReceivablesView.swift */; };
+		RC5CA01E2A1B3D4F00A1B2C3 /* ReceiptScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = RC5CA01E2A1B3D4F00A1B2C4 /* ReceiptScannerView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -164,7 +168,6 @@
 		1574B9FB4D6F3E671EE84E7A /* AssetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetService.swift; sourceTree = "<group>"; };
 		16CDA71726912ED9BC64FFCA /* ReceivableRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceivableRow.swift; sourceTree = "<group>"; };
 		1B4708E91975B8E95B21613B /* ExpenseFormSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseFormSheet.swift; sourceTree = "<group>"; };
-		RC5CA01E2A1B3D4F00A1B2C4 /* ReceiptScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptScannerView.swift; sourceTree = "<group>"; };
 		1C74000B82E25861D9A6757A /* WatchlistViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchlistViewModel.swift; sourceTree = "<group>"; };
 		20BA333DE7AA7138AF80277E /* NavigationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationManager.swift; sourceTree = "<group>"; };
 		2475C1B99A54995AA273661B /* Deposit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deposit.swift; sourceTree = "<group>"; };
@@ -172,6 +175,7 @@
 		2A4A91FC086AF8C32D8BCA92 /* ReceivableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceivableViewModel.swift; sourceTree = "<group>"; };
 		2A86AA8E52C2849CD9A64953 /* BuySellFormSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuySellFormSheet.swift; sourceTree = "<group>"; };
 		2DC4E859FBE3AD8BA9454CCB /* Receivable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Receivable.swift; sourceTree = "<group>"; };
+		34F0C7436FD7F37A8EA39DC6 /* BuySellDetailView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BuySellDetailView.swift; sourceTree = "<group>"; };
 		357E92B2B73D1666B3EFFDB9 /* ReceivableFormSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceivableFormSheet.swift; sourceTree = "<group>"; };
 		35D45ADC0C9624A71CC925FC /* ToastManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastManager.swift; sourceTree = "<group>"; };
 		3608361A511BC4D3C2CF3A47 /* InvestmentRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentRow.swift; sourceTree = "<group>"; };
@@ -187,6 +191,7 @@
 		51BA9FF6914C958256228D0E /* ProfitAllocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitAllocationService.swift; sourceTree = "<group>"; };
 		54C3A605BD664DD5F78F5964 /* WalletViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletViewModel.swift; sourceTree = "<group>"; };
 		5785E5DADFECF4666FE48C32 /* GlassCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassCard.swift; sourceTree = "<group>"; };
+		57B8F2E46FD8960ACDDDF575 /* SoldFormSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SoldFormSheet.swift; sourceTree = "<group>"; };
 		5A7E99BC690BB3108B78C935 /* ExpenseAnalyticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseAnalyticsView.swift; sourceTree = "<group>"; };
 		6154545CC193ECED8B894612 /* BudgyByDarskieApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgyByDarskieApp.swift; sourceTree = "<group>"; };
 		61AA3B765FA02DCDB1EBEC17 /* PortfolioSummaryCards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioSummaryCards.swift; sourceTree = "<group>"; };
@@ -225,6 +230,7 @@
 		A095CA3DF12240E755E52833 /* ClearDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClearDataService.swift; sourceTree = "<group>"; };
 		A097B057E5604503FE05D912 /* BuySellRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuySellRow.swift; sourceTree = "<group>"; };
 		A0F5D69713D2AE40E04B4E1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		A47C6BFCC44A4B97584A266F /* TPSLFormSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TPSLFormSheet.swift; sourceTree = "<group>"; };
 		A7B49AF83AA30263A4F4F8B6 /* AssetsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsView.swift; sourceTree = "<group>"; };
 		AB86371942373643CF66AFB0 /* InvestmentFormSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentFormSheet.swift; sourceTree = "<group>"; };
 		ABD2C4BAB3B8953A2BC42D00 /* BudgyWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgyWidget.swift; sourceTree = "<group>"; };
@@ -232,6 +238,7 @@
 		ACC4A227EE3BFF457C22D5AB /* ExpensesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpensesView.swift; sourceTree = "<group>"; };
 		B2391563C77B83004E0CB6C3 /* Expense.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expense.swift; sourceTree = "<group>"; };
 		B3FA253CFDB1F7FC47C2765A /* BudgyByDarskie.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = BudgyByDarskie.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B5665806A2A8F0ACD464EBC2 /* InvestmentExit.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InvestmentExit.swift; sourceTree = "<group>"; };
 		B9D862D2FDA6FF27C9AE4D26 /* ProfitAllocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfitAllocation.swift; sourceTree = "<group>"; };
 		BC48B67ACB68AD4DDC3A8534 /* AssetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetViewModel.swift; sourceTree = "<group>"; };
 		BD2F54A16812752BF4D1579A /* BuySellService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuySellService.swift; sourceTree = "<group>"; };
@@ -267,6 +274,7 @@
 		FAA30C9AC4CD2B6B985DC2CC /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		FF90205AFA31840E3BF5EB06 /* DepositViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositViewModel.swift; sourceTree = "<group>"; };
 		FFACFE34099E04D69C2A620C /* ActivityLogViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityLogViewModel.swift; sourceTree = "<group>"; };
+		RC5CA01E2A1B3D4F00A1B2C4 /* ReceiptScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptScannerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -353,6 +361,8 @@
 				A097B057E5604503FE05D912 /* BuySellRow.swift */,
 				005C01237115275A710F3AF1 /* BuySellView.swift */,
 				F6A1BF5253892C68FF2A7046 /* ProfitAllocationSheet.swift */,
+				57B8F2E46FD8960ACDDDF575 /* SoldFormSheet.swift */,
+				34F0C7436FD7F37A8EA39DC6 /* BuySellDetailView.swift */,
 			);
 			path = BuySell;
 			sourceTree = "<group>";
@@ -405,6 +415,7 @@
 				EC706064189AD618F1E28F4F /* InvestmentsView.swift */,
 				61AA3B765FA02DCDB1EBEC17 /* PortfolioSummaryCards.swift */,
 				8A08B300CF5C3ADEF48D08F5 /* WatchlistView.swift */,
+				A47C6BFCC44A4B97584A266F /* TPSLFormSheet.swift */,
 			);
 			path = Investments;
 			sourceTree = "<group>";
@@ -547,6 +558,7 @@
 				149273303533EB61C2361E3B /* WalletTransaction.swift */,
 				0ACBF065A552DFBAB3470E5F /* WatchlistItem.swift */,
 				C0F001266D63159E886794A0 /* Withdrawal.swift */,
+				B5665806A2A8F0ACD464EBC2 /* InvestmentExit.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -621,8 +633,6 @@
 			dependencies = (
 			);
 			name = BudgyWidgetExtension;
-			packageProductDependencies = (
-			);
 			productName = BudgyWidgetExtension;
 			productReference = CF5446390F894ABD80B9F04E /* BudgyWidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
@@ -804,6 +814,10 @@
 				E73E1C69388764D0D1BE2322 /* WatchlistViewModel.swift in Sources */,
 				35745C91677030F361A4B78E /* WithdrawFormSheet.swift in Sources */,
 				31A3828E07F7A81D89FA6EB1 /* Withdrawal.swift in Sources */,
+				80757FB7FA48AE1D86BA1D0F /* SoldFormSheet.swift in Sources */,
+				8FB86FF52D317BDE2636A4E4 /* BuySellDetailView.swift in Sources */,
+				57D4885A060FAD4C7BAC3760 /* InvestmentExit.swift in Sources */,
+				8FE92D37DF425E3418CD0FB5 /* TPSLFormSheet.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

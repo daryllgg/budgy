@@ -137,11 +137,11 @@ struct FinanceView: View {
                 }
             }
             .sheet(item: $withdrawWallet) { wallet in
-                WithdrawFormSheet(bankWallet: wallet, cashWallets: walletVM.cashWallets) { amount, fee, cashWalletId in
-                    guard let uid = authVM.uid, let bankId = wallet.id else { return }
-                    await walletVM.withdraw(uid: uid, bankWalletId: bankId, cashWalletId: cashWalletId, amount: amount, fee: fee, bankName: wallet.name)
+                TransferFormSheet(sourceWallet: wallet, allWallets: walletVM.wallets) { amount, fee, destWalletId in
+                    guard let uid = authVM.uid, let sourceId = wallet.id else { return }
+                    await walletVM.transfer(uid: uid, sourceWalletId: sourceId, destWalletId: destWalletId, amount: amount, fee: fee, sourceName: wallet.name)
                     hapticSuccess()
-                    toast.show("Withdrawal completed")
+                    toast.show("Transfer completed")
                 }
             }
             // Expense sheets
@@ -201,7 +201,6 @@ struct FinanceView: View {
                 expenseVM.subscribe(uid: uid)
             }
             .onDisappear {
-                walletVM.unsubscribe()
                 expenseVM.unsubscribe()
             }
             .onChange(of: nav.showQuickAddExpense) { _, show in
@@ -291,9 +290,9 @@ struct FinanceView: View {
                             }
                             .swipeActions(edge: .leading) {
                                 Button { withdrawWallet = wallet } label: {
-                                    Label("Withdraw", systemImage: "arrow.down.circle")
+                                    Label("Transfer", systemImage: "arrow.left.arrow.right")
                                 }
-                                .tint(.red)
+                                .tint(.blue)
                                 Button { depositWallet = wallet } label: {
                                     Label("Deposit", systemImage: "plus.circle")
                                 }
@@ -320,6 +319,10 @@ struct FinanceView: View {
                                 .tint(.orange)
                             }
                             .swipeActions(edge: .leading) {
+                                Button { withdrawWallet = wallet } label: {
+                                    Label("Transfer", systemImage: "arrow.left.arrow.right")
+                                }
+                                .tint(.blue)
                                 Button { depositWallet = wallet } label: {
                                     Label("Deposit", systemImage: "plus.circle")
                                 }

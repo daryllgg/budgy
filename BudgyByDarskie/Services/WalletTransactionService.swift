@@ -19,6 +19,7 @@ struct WalletTransactionService {
         var deposits: [WalletTransaction] = []
         var expenses: [WalletTransaction] = []
         var investments: [WalletTransaction] = []
+        var investmentExits: [WalletTransaction] = []
         var buySells: [WalletTransaction] = []
         var receivablePayments: [WalletTransaction] = []
         var receivableOuts: [WalletTransaction] = []
@@ -26,7 +27,7 @@ struct WalletTransactionService {
         var withdrawals: [WalletTransaction] = []
 
         func emit() {
-            let all = (deposits + expenses + investments + buySells + receivablePayments + receivableOuts + assets + withdrawals)
+            let all = (deposits + expenses + investments + investmentExits + buySells + receivablePayments + receivableOuts + assets + withdrawals)
                 .sorted { $0.date > $1.date }
             onChange(all)
         }
@@ -97,25 +98,65 @@ struct WalletTransactionService {
             }
         listeners.append(investmentListener)
 
-        // 4. Buy & Sell — wallet appears in fundingSources array
+        // 3b. Investment Exits (TP/SL) — wallet appears in destinations
+        let exitListener = userDoc(uid).collection("investmentExits")
+            .whereField("year", isEqualTo: year)
+            .addSnapshotListener { snapshot, _ in
+                guard let docs = snapshot?.documents else { return }
+                let allExits = docs.compactMap { try? $0.data(as: InvestmentExit.self) }
+                investmentExits = allExits.compactMap { ex in
+                    guard let dest = ex.destinations.first(where: { $0.sourceId == walletId }) else { return nil }
+                    let action = ex.profit >= 0 ? "TP" : "SL"
+                    return WalletTransaction(
+                        id: "exit_\(ex.id ?? "")",
+                        type: .investmentExit,
+                        title: "\(action): \(ex.stock)",
+                        subtitle: "\(ex.investmentType.label) · \(action)",
+                        amount: dest.amount,
+                        date: ex.date,
+                        notes: ex.notes
+                    )
+                }
+                emit()
+            }
+        listeners.append(exitListener)
+
+        // 4. Buy & Sell — wallet appears in fundingSources (money out) or soldDestinations (money in)
         // Firestore can't query array-of-maps by nested field, so we fetch all and filter client-side
         let buySellListener = userDoc(uid).collection("buySellTransactions")
             .whereField("year", isEqualTo: year)
             .addSnapshotListener { snapshot, _ in
                 guard let docs = snapshot?.documents else { return }
                 let allTxs = docs.compactMap { try? $0.data(as: BuySellTransaction.self) }
-                buySells = allTxs.compactMap { tx in
-                    guard let source = tx.fundingSources.first(where: { $0.sourceId == walletId }) else { return nil }
-                    return WalletTransaction(
-                        id: "buysell_\(tx.id ?? "")",
-                        type: .buySell,
-                        title: tx.itemName,
-                        subtitle: "\(tx.itemType.label) · \(tx.status.label)",
-                        amount: source.amount,
-                        date: tx.dateBought ?? tx.createdAt ?? Date(),
-                        notes: tx.notes
-                    )
+                var results: [WalletTransaction] = []
+                for tx in allTxs {
+                    // Money out: funded from this wallet
+                    if let source = tx.fundingSources.first(where: { $0.sourceId == walletId }) {
+                        results.append(WalletTransaction(
+                            id: "buysell_\(tx.id ?? "")",
+                            type: .buySell,
+                            title: tx.itemName,
+                            subtitle: "\(tx.itemType.label) · \(tx.status.label)",
+                            amount: source.amount,
+                            date: tx.dateBought ?? tx.createdAt ?? Date(),
+                            notes: tx.notes
+                        ))
+                    }
+                    // Money in: sold proceeds to this wallet
+                    if let dests = tx.soldDestinations,
+                       let dest = dests.first(where: { $0.sourceId == walletId }) {
+                        results.append(WalletTransaction(
+                            id: "buysell_in_\(tx.id ?? "")",
+                            type: .buySellIn,
+                            title: "Sold: \(tx.itemName)",
+                            subtitle: "\(tx.itemType.label) · Sold",
+                            amount: dest.amount,
+                            date: tx.dateSold ?? tx.updatedAt ?? Date(),
+                            notes: tx.notes
+                        ))
+                    }
                 }
+                buySells = results
                 emit()
             }
         listeners.append(buySellListener)
@@ -205,7 +246,7 @@ struct WalletTransactionService {
             }
         listeners.append(assetListener)
 
-        // 7. Withdrawals — walletId matches bankWalletId (money out) or cashWalletId (money in)
+        // 7. Transfers — walletId matches bankWalletId (money out) or cashWalletId (money in)
         let withdrawalListener = userDoc(uid).collection("withdrawals")
             .whereField("year", isEqualTo: year)
             .addSnapshotListener { snapshot, _ in
@@ -216,8 +257,8 @@ struct WalletTransactionService {
                         return WalletTransaction(
                             id: "withdrawal_bank_\(w.id ?? "")",
                             type: .withdrawal,
-                            title: "Withdraw to \(w.cashWalletName)",
-                            subtitle: w.fee > 0 ? "Amount: \(formatPhp(w.amount)) + Fee: \(formatPhp(w.fee))" : "Withdrawal",
+                            title: "Transfer to \(w.cashWalletName)",
+                            subtitle: w.fee > 0 ? "Amount: \(formatPhp(w.amount)) + Fee: \(formatPhp(w.fee))" : "Transfer",
                             amount: w.amount + w.fee,
                             date: w.date,
                             notes: ""
@@ -226,8 +267,8 @@ struct WalletTransactionService {
                         return WalletTransaction(
                             id: "withdrawal_cash_\(w.id ?? "")",
                             type: .withdrawalIn,
-                            title: "Withdraw from \(w.bankWalletName)",
-                            subtitle: "Cash received",
+                            title: "Transfer from \(w.bankWalletName)",
+                            subtitle: "Funds received",
                             amount: w.amount,
                             date: w.date,
                             notes: ""

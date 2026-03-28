@@ -81,36 +81,43 @@ struct BuySellFormSheet: View {
                             }
                         }
                     }
-                    HStack {
-                        Picker("Wallet", selection: $newSourceId) {
-                            Text("Select").tag("")
-                            ForEach(wallets) { w in
-                                Text("\(w.name) (\(formatPhp(w.balance)))").tag(w.id ?? "")
-                            }
-                        }
-                        .labelsHidden()
-                        TextField("Amount", text: $newSourceAmount)
-                            .keyboardType(.decimalPad)
-                            .frame(width: 100)
-                        Button {
-                            guard let amt = Double(newSourceAmount), !newSourceId.isEmpty else { return }
-                            let wallet = wallets.first(where: { $0.id == newSourceId })
-                            let existingFromWallet = fundingSources.filter { $0.sourceId == newSourceId }.reduce(0) { $0 + $1.amount }
-                            let oldFromWallet = existingTx?.fundingSources.filter { $0.sourceId == newSourceId }.reduce(0) { $0 + $1.amount } ?? 0
-                            let available = (wallet?.balance ?? 0) + oldFromWallet - existingFromWallet
 
-                            guard amt <= available else {
-                                errorMessage = "Insufficient balance in \(wallet?.name ?? "wallet"). Available: \(formatPhp(available))"
-                                return
-                            }
-                            errorMessage = ""
-                            let name = wallet?.name ?? ""
-                            fundingSources.append(FundingSource(sourceId: newSourceId, sourceName: name, amount: amt))
-                            newSourceId = ""
-                            newSourceAmount = ""
-                        } label: {
-                            Image(systemName: "plus.circle.fill")
+                    Picker("Wallet", selection: $newSourceId) {
+                        Text("Select Wallet").tag("")
+                        ForEach(wallets) { w in
+                            Text("\(w.name) (\(formatPhp(w.balance)))").tag(w.id ?? "")
                         }
+                    }
+
+                    TextField("Amount", text: $newSourceAmount)
+                        .keyboardType(.decimalPad)
+
+                    Button {
+                        guard !newSourceId.isEmpty else {
+                            errorMessage = "Select a wallet first"
+                            return
+                        }
+                        guard let amt = Double(newSourceAmount), amt > 0 else {
+                            errorMessage = "Enter a valid amount"
+                            return
+                        }
+                        let wallet = wallets.first(where: { $0.id == newSourceId })
+                        let existingFromWallet = fundingSources.filter { $0.sourceId == newSourceId }.reduce(0) { $0 + $1.amount }
+                        let oldFromWallet = existingTx?.fundingSources.filter { $0.sourceId == newSourceId }.reduce(0) { $0 + $1.amount } ?? 0
+                        let available = (wallet?.balance ?? 0) + oldFromWallet - existingFromWallet
+
+                        guard amt <= available else {
+                            errorMessage = "Insufficient balance in \(wallet?.name ?? "wallet"). Available: \(formatPhp(available))"
+                            return
+                        }
+                        errorMessage = ""
+                        let name = wallet?.name ?? ""
+                        fundingSources.append(FundingSource(sourceId: newSourceId, sourceName: name, amount: amt))
+                        newSourceId = ""
+                        newSourceAmount = ""
+                    } label: {
+                        Label("Add Funding Source", systemImage: "plus.circle.fill")
+                            .frame(maxWidth: .infinity, alignment: .center)
                     }
 
                     if !errorMessage.isEmpty {
@@ -153,7 +160,7 @@ struct BuySellFormSheet: View {
                             dismiss()
                         }
                     }
-                    .disabled(itemName.isEmpty || isSaving)
+                    .disabled(itemName.isEmpty || fundingSources.isEmpty || isSaving)
                 }
             }
         }

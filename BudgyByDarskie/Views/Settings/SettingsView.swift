@@ -1,10 +1,8 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @Environment(AuthViewModel.self) private var authVM
     @Environment(AppearanceManager.self) private var appearance
     @Environment(NotificationManager.self) private var notifications
-    @State private var showSignOutConfirmation = false
     @State private var showAddReminder = false
     @State private var newReminderDate = Date()
     @State private var deleteReminderTarget: ReminderTime?
@@ -13,21 +11,6 @@ struct SettingsView: View {
         @Bindable var appearance = appearance
 
         List {
-            // Profile Section
-            Section {
-                HStack(spacing: 14) {
-                    profileImage
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(authVM.displayName)
-                            .font(.headline)
-                        Text(authVM.email)
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-                .padding(.vertical, 4)
-            }
-
             // Appearance Section
             Section("Appearance") {
                 Picker("Mode", selection: $appearance.selectedMode) {
@@ -92,27 +75,8 @@ struct SettingsView: View {
                 LabeledContent("Version", value: "1.0.0")
             }
 
-            // Sign Out
-            Section {
-                Button(role: .destructive) {
-                    showSignOutConfirmation = true
-                } label: {
-                    HStack {
-                        Image(systemName: "rectangle.portrait.and.arrow.right")
-                        Text("Sign Out")
-                    }
-                    .frame(maxWidth: .infinity, alignment: .center)
-                }
-            }
         }
         .navigationTitle("Settings")
-        .alert("Sign Out", isPresented: $showSignOutConfirmation) {
-            Button("Sign Out", role: .destructive) {
-                authVM.signOut()
-            }
-        } message: {
-            Text("Are you sure you want to sign out?")
-        }
         .alert("Delete Reminder?", isPresented: Binding(get: { deleteReminderTarget != nil }, set: { if !$0 { deleteReminderTarget = nil } }), presenting: deleteReminderTarget) { time in
             Button("Delete", role: .destructive) {
                 notifications.removeReminder(time)
@@ -152,36 +116,4 @@ struct SettingsView: View {
         .presentationDetents([.medium])
     }
 
-    // MARK: - Profile Image
-
-    @ViewBuilder
-    private var profileImage: some View {
-        if let photoURL = authVM.photoURL {
-            AsyncImage(url: photoURL) { phase in
-                switch phase {
-                case .success(let image):
-                    image
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 48, height: 48)
-                        .clipShape(Circle())
-                case .failure:
-                    profilePlaceholder
-                case .empty:
-                    ProgressView()
-                        .frame(width: 48, height: 48)
-                @unknown default:
-                    profilePlaceholder
-                }
-            }
-        } else {
-            profilePlaceholder
-        }
-    }
-
-    private var profilePlaceholder: some View {
-        Image(systemName: "person.crop.circle.fill")
-            .font(.system(size: 40))
-            .foregroundStyle(.secondary)
-    }
 }

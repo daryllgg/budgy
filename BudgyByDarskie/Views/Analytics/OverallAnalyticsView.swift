@@ -14,7 +14,7 @@ struct OverallAnalyticsView: View {
     @State private var selectedPoint: (date: Date, total: Double)?
 
     private var currentGrandTotal: Double {
-        walletVM.totalBalance + investmentVM.totalInvestedPhp + receivableVM.totalReceivables + assetVM.totalAssets
+        walletVM.totalBalance + investmentVM.totalInvestedPhp + receivableVM.totalReceivables + assetVM.totalAssets + buySellVM.totalInventoryValue
     }
 
     private struct TimelineEvent {

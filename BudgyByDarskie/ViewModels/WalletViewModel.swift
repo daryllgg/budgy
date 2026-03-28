@@ -52,9 +52,9 @@ class WalletViewModel {
         }
     }
 
-    func withdraw(uid: String, bankWalletId: String, cashWalletId: String, amount: Double, fee: Double, bankName: String) async {
+    func transfer(uid: String, sourceWalletId: String, destWalletId: String, amount: Double, fee: Double, sourceName: String) async {
         do {
-            try await WalletService.withdraw(uid: uid, bankWalletId: bankWalletId, cashWalletId: cashWalletId, amount: amount, fee: fee, bankName: bankName)
+            try await WalletService.transfer(uid: uid, sourceWalletId: sourceWalletId, destWalletId: destWalletId, amount: amount, fee: fee, sourceName: sourceName)
         } catch {
             errorMessage = error.localizedDescription
         }

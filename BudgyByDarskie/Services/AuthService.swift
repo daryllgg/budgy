@@ -22,7 +22,7 @@ class AuthService {
 
     var uid: String? { user?.uid }
 
-    func signInWithGoogle() async throws {
+    func signInWithGoogle(loginHint: String? = nil) async throws {
         guard let clientID = FirebaseApp.app()?.options.clientID else {
             throw AuthError.missingClientID
         }
@@ -35,7 +35,7 @@ class AuthService {
             throw AuthError.noRootViewController
         }
 
-        let result = try await GIDSignIn.sharedInstance.signIn(withPresenting: rootVC)
+        let result = try await GIDSignIn.sharedInstance.signIn(withPresenting: rootVC, hint: loginHint)
 
         guard let idToken = result.user.idToken?.tokenString else {
             throw AuthError.missingIDToken
@@ -52,6 +52,14 @@ class AuthService {
     func signOut() throws {
         try Auth.auth().signOut()
         GIDSignIn.sharedInstance.signOut()
+    }
+
+    func switchAccount() async throws {
+        try Auth.auth().signOut()
+        // Don't sign out of Google — keeps the session alive
+        // so the account picker appears directly without the
+        // "google.com wants to use..." permission prompt
+        try await signInWithGoogle()
     }
 
     enum AuthError: LocalizedError {

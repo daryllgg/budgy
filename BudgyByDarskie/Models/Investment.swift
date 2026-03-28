@@ -14,6 +14,7 @@ struct Investment: Identifiable, Codable {
     var buyPrice: Double
     var quantity: Double
     var remarks: String
+    var exited: Bool?
     var year: Int
     @ServerTimestamp var createdAt: Date?
     @ServerTimestamp var updatedAt: Date?

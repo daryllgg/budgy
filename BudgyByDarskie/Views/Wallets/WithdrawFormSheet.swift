@@ -1,86 +1,85 @@
 import SwiftUI
 
-struct WithdrawFormSheet: View {
-    let bankWallet: Wallet
-    let cashWallets: [Wallet]
+struct TransferFormSheet: View {
+    let sourceWallet: Wallet
+    let allWallets: [Wallet]
     let onSubmit: (Double, Double, String) async -> Void
 
     @Environment(\.dismiss) private var dismiss
     @State private var amount = ""
     @State private var fee = ""
-    @State private var selectedCashId = ""
+    @State private var selectedDestId = ""
     @State private var isSaving = false
     @State private var errorMessage: String?
 
-    private var withdrawAmount: Double { Double(amount) ?? 0 }
+    private var transferAmount: Double { Double(amount) ?? 0 }
     private var feeAmount: Double { Double(fee) ?? 0 }
-    private var totalDeduction: Double { withdrawAmount + feeAmount }
+    private var totalDeduction: Double { transferAmount + feeAmount }
+    private var destinationWallets: [Wallet] {
+        allWallets.filter { $0.id != sourceWallet.id }
+    }
 
     var body: some View {
         NavigationStack {
             Form {
-                Section("Withdraw From") {
+                Section("Transfer From") {
                     HStack {
-                        Image(systemName: "building.columns.fill")
+                        Image(systemName: sourceWallet.type == .bank ? "building.columns.fill" : "banknote.fill")
                             .foregroundStyle(AppTheme.wallets)
-                        Text(bankWallet.name)
+                        Text(sourceWallet.name)
                             .fontWeight(.semibold)
                         Spacer()
-                        Text(formatPhp(bankWallet.balance))
+                        Text(formatPhp(sourceWallet.balance))
                             .foregroundStyle(.secondary)
                             .monospacedDigit()
                     }
                 }
 
                 Section("Amount") {
-                    TextField("Withdrawal amount", text: $amount)
+                    TextField("Transfer amount", text: $amount)
                         .keyboardType(.decimalPad)
                     TextField("Fee (optional)", text: $fee)
                         .keyboardType(.decimalPad)
                 }
 
-                if cashWallets.count > 1 {
-                    Section("Receive To") {
-                        Picker("Cash Wallet", selection: $selectedCashId) {
-                            ForEach(cashWallets) { wallet in
-                                Text(wallet.name).tag(wallet.id ?? "")
+                Section("Transfer To") {
+                    if destinationWallets.isEmpty {
+                        Text("No other wallets available")
+                            .foregroundStyle(.secondary)
+                    } else {
+                        Picker("Destination", selection: $selectedDestId) {
+                            Text("Select Wallet").tag("")
+                            ForEach(destinationWallets) { wallet in
+                                HStack {
+                                    Text(wallet.name)
+                                    Text("(\(formatPhp(wallet.balance)))")
+                                }
+                                .tag(wallet.id ?? "")
                             }
-                        }
-                    }
-                } else if let cash = cashWallets.first {
-                    Section("Receive To") {
-                        HStack {
-                            Image(systemName: "banknote.fill")
-                                .foregroundStyle(AppTheme.positive)
-                            Text(cash.name)
-                                .fontWeight(.semibold)
-                            Spacer()
-                            Text(formatPhp(cash.balance))
-                                .foregroundStyle(.secondary)
-                                .monospacedDigit()
                         }
                     }
                 }
 
-                if withdrawAmount > 0 {
+                if transferAmount > 0 {
                     Section("Summary") {
                         HStack {
-                            Text("Bank deduction")
+                            Text("\(sourceWallet.name) deduction")
                             Spacer()
                             Text(formatPhp(totalDeduction))
                                 .monospacedDigit()
                                 .foregroundStyle(AppTheme.negative)
                         }
                         HStack {
-                            Text("Cash received")
+                            let destName = destinationWallets.first(where: { $0.id == selectedDestId })?.name ?? "Destination"
+                            Text("\(destName) received")
                             Spacer()
-                            Text(formatPhp(withdrawAmount))
+                            Text(formatPhp(transferAmount))
                                 .monospacedDigit()
                                 .foregroundStyle(AppTheme.positive)
                         }
                         if feeAmount > 0 {
                             HStack {
-                                Text("Transaction fee")
+                                Text("Transfer fee")
                                 Spacer()
                                 Text(formatPhp(feeAmount))
                                     .monospacedDigit()
@@ -97,23 +96,8 @@ struct WithdrawFormSheet: View {
                             .font(.caption)
                     }
                 }
-
-                if withdrawAmount <= 0 || selectedCashId.isEmpty {
-                    Section {
-                        VStack(alignment: .leading, spacing: 4) {
-                            if withdrawAmount <= 0 {
-                                Label("Enter a withdrawal amount", systemImage: "exclamationmark.circle")
-                            }
-                            if selectedCashId.isEmpty {
-                                Label("No cash wallet available", systemImage: "exclamationmark.circle")
-                            }
-                        }
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    }
-                }
             }
-            .navigationTitle("Withdraw")
+            .navigationTitle("Transfer Funds")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -123,33 +107,28 @@ struct WithdrawFormSheet: View {
                     Button("Confirm") {
                         submit()
                     }
-                    .disabled(withdrawAmount <= 0 || selectedCashId.isEmpty || isSaving)
+                    .disabled(transferAmount <= 0 || selectedDestId.isEmpty || isSaving)
                     .fontWeight(.semibold)
-                }
-            }
-            .onAppear {
-                if let first = cashWallets.first?.id {
-                    selectedCashId = first
                 }
             }
         }
     }
 
     private func submit() {
-        guard withdrawAmount > 0 else { return }
-        guard totalDeduction <= bankWallet.balance else {
-            errorMessage = "Insufficient balance. Available: \(formatPhp(bankWallet.balance))"
+        guard transferAmount > 0 else { return }
+        guard totalDeduction <= sourceWallet.balance else {
+            errorMessage = "Insufficient balance. Available: \(formatPhp(sourceWallet.balance))"
             return
         }
-        guard !selectedCashId.isEmpty else {
-            errorMessage = "No cash wallet available to receive funds."
+        guard !selectedDestId.isEmpty else {
+            errorMessage = "Select a destination wallet."
             return
         }
 
         isSaving = true
         errorMessage = nil
         Task {
-            await onSubmit(withdrawAmount, feeAmount, selectedCashId)
+            await onSubmit(transferAmount, feeAmount, selectedDestId)
             dismiss()
         }
     }

@@ -56,9 +56,9 @@ struct BuySellService {
             "createdAt": FieldValue.serverTimestamp(),
             "updatedAt": FieldValue.serverTimestamp(),
         ]
-        data["sellPrice"] = tx.sellPrice as Any
-        data["profit"] = profit as Any
-        data["buyerName"] = tx.buyerName as Any
+        if let sellPrice = tx.sellPrice { data["sellPrice"] = sellPrice }
+        if let profit = profit { data["profit"] = profit }
+        if let buyerName = tx.buyerName, !buyerName.isEmpty { data["buyerName"] = buyerName }
         if let dateBought = tx.dateBought { data["dateBought"] = Timestamp(date: dateBought) }
         if let dateSold = tx.dateSold { data["dateSold"] = Timestamp(date: dateSold) }
 
@@ -109,9 +109,9 @@ struct BuySellService {
             "notes": tx.notes,
             "updatedAt": FieldValue.serverTimestamp(),
         ]
-        data["sellPrice"] = tx.sellPrice as Any
-        data["profit"] = profit as Any
-        data["buyerName"] = tx.buyerName as Any
+        if let sellPrice = tx.sellPrice { data["sellPrice"] = sellPrice } else { data["sellPrice"] = NSNull() }
+        if let profit = profit { data["profit"] = profit } else { data["profit"] = NSNull() }
+        if let buyerName = tx.buyerName, !buyerName.isEmpty { data["buyerName"] = buyerName } else { data["buyerName"] = NSNull() }
         if let dateBought = tx.dateBought { data["dateBought"] = Timestamp(date: dateBought) }
         if let dateSold = tx.dateSold { data["dateSold"] = Timestamp(date: dateSold) }
 
@@ -119,6 +119,42 @@ struct BuySellService {
 
         batch.commit(completion: nil)
         ActivityLogService.log(uid: uid, type: .buySell, action: .edit, description: "Updated B&S: \(tx.itemName)", amount: buyPrice)
+    }
+
+    static func markAsSold(uid: String, txId: String, buyPrice: Double, sellPrice: Double, buyerName: String, dateSold: Date, soldDestinations: [FundingSource]) {
+        let txRef = col(uid).document(txId)
+        let profit = sellPrice - buyPrice
+        let batch = db.batch()
+
+        // Credit each destination wallet
+        for dest in soldDestinations {
+            let walletRef = db.collection("users").document(uid).collection("wallets").document(dest.sourceId)
+            batch.updateData([
+                "balance": FieldValue.increment(dest.amount),
+                "updatedAt": FieldValue.serverTimestamp()
+            ], forDocument: walletRef)
+        }
+
+        let destData = soldDestinations.map { [
+            "sourceId": $0.sourceId,
+            "sourceName": $0.sourceName,
+            "amount": $0.amount
+        ] as [String: Any] }
+
+        var data: [String: Any] = [
+            "sellPrice": sellPrice,
+            "profit": profit,
+            "dateSold": Timestamp(date: dateSold),
+            "soldDestinations": destData,
+            "status": BuySellStatus.sold.rawValue,
+            "updatedAt": FieldValue.serverTimestamp()
+        ]
+        if !buyerName.isEmpty { data["buyerName"] = buyerName }
+
+        batch.updateData(data, forDocument: txRef)
+
+        batch.commit(completion: nil)
+        ActivityLogService.log(uid: uid, type: .buySell, action: .edit, description: "Sold item for \(sellPrice)", amount: sellPrice)
     }
 
     static func delete(uid: String, txId: String, fundingSources: [FundingSource]) async throws {

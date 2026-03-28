@@ -10,6 +10,7 @@ struct BuySellView: View {
     @State private var editingTx: BuySellTransaction?
     @State private var deleteTarget: BuySellTransaction?
     @State private var showAllocations = false
+    @State private var sellingTx: BuySellTransaction?
 
     // Filters
     @State private var sortBy: BuySellSortOption = .dateNewest
@@ -82,17 +83,7 @@ struct BuySellView: View {
                     } else {
                         Section("Transactions") {
                             ForEach(filteredTransactions) { tx in
-                                BuySellRow(transaction: tx)
-                                    .swipeActions(edge: .trailing) {
-                                        Button(role: .destructive) { deleteTarget = tx } label: {
-                                            Label("Delete", systemImage: "trash")
-                                        }
-                                        .tint(.red)
-                                        Button { editingTx = tx } label: {
-                                            Label("Edit", systemImage: "pencil")
-                                        }
-                                        .tint(.orange)
-                                    }
+                                transactionRow(tx)
                             }
                         }
                     }
@@ -156,7 +147,9 @@ struct BuySellView: View {
                 let docId = await buySellVM.add(uid: uid, tx: tx)
                 if docId != nil {
                     hapticSuccess()
-                    toast.show("Transaction added")
+                    toast.show("Added (\(tx.fundingSources.count) source\(tx.fundingSources.count == 1 ? "" : "s") deducted)")
+                } else {
+                    toast.show("Failed: \(buySellVM.errorMessage ?? "Unknown error")")
                 }
             }
         }
@@ -166,6 +159,14 @@ struct BuySellView: View {
                 await buySellVM.update(uid: uid, txId: id, oldFundingSources: tx.fundingSources, tx: updated)
                 hapticSuccess()
                 toast.show("Transaction updated")
+            }
+        }
+        .sheet(item: $sellingTx) { tx in
+            SoldFormSheet(transaction: tx, wallets: walletVM.wallets) { sellPrice, buyerName, dateSold, destinations in
+                guard let uid = authVM.uid, let id = tx.id else { return }
+                buySellVM.markAsSold(uid: uid, txId: id, buyPrice: tx.buyPrice, sellPrice: sellPrice, buyerName: buyerName, dateSold: dateSold, soldDestinations: destinations)
+                hapticSuccess()
+                toast.show("Marked as sold")
             }
         }
         .sheet(isPresented: $showAllocations) {
@@ -199,6 +200,35 @@ struct BuySellView: View {
             buySellVM.unsubscribe()
             walletVM.unsubscribe()
             profitVM.unsubscribe()
+        }
+    }
+
+    @ViewBuilder
+    private func transactionRow(_ tx: BuySellTransaction) -> some View {
+        NavigationLink {
+            BuySellDetailView(transaction: tx)
+        } label: {
+            BuySellRow(transaction: tx)
+        }
+        .swipeActions(edge: .trailing) {
+            if tx.status != .sold {
+                Button(role: .destructive) { deleteTarget = tx } label: {
+                    Label("Delete", systemImage: "trash")
+                }
+                .tint(.red)
+                Button { editingTx = tx } label: {
+                    Label("Edit", systemImage: "pencil")
+                }
+                .tint(.orange)
+            }
+        }
+        .swipeActions(edge: .leading) {
+            if tx.status == .available {
+                Button { sellingTx = tx } label: {
+                    Label("Sold", systemImage: "banknote")
+                }
+                .tint(.green)
+            }
         }
     }
 }

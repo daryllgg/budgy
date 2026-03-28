@@ -16,7 +16,7 @@ struct DashboardView: View {
     @State private var showExpenseForm = false
 
     private var grandTotal: Double {
-        walletVM.totalBalance + investmentVM.totalInvestedPhp + receivableVM.totalReceivables + assetVM.totalAssets
+        walletVM.totalBalance + investmentVM.totalInvestedPhp + receivableVM.totalReceivables + assetVM.totalAssets + buySellVM.totalInventoryValue
     }
 
     private var thisWeekExpenses: Double {
@@ -157,6 +157,7 @@ struct DashboardView: View {
                     investmentTotal: investmentVM.totalInvestedPhp,
                     receivableTotal: receivableVM.totalReceivables,
                     assetTotal: assetVM.totalAssets,
+                    buySellInventory: buySellVM.totalInventoryValue,
                     grandTotal: grandTotal
                 )
             }

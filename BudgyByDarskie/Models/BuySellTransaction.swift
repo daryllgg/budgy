@@ -12,6 +12,7 @@ struct BuySellTransaction: Identifiable, Codable {
     var buyerName: String?
     var dateBought: Date?
     var dateSold: Date?
+    var soldDestinations: [FundingSource]?
     var status: BuySellStatus
     var notes: String
     var year: Int

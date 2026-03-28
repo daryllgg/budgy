@@ -13,6 +13,7 @@ class BuySellViewModel {
     var soldCount: Int { transactions.filter { $0.status == .sold }.count }
     var pendingCount: Int { transactions.filter { $0.status == .pending }.count }
     var availableCount: Int { transactions.filter { $0.status == .available }.count }
+    var totalInventoryValue: Double { transactions.filter { $0.status != .sold }.reduce(0) { $0 + $1.buyPrice } }
 
     var profitByType: [ItemType: Double] {
         Dictionary(grouping: transactions.filter { $0.status == .sold }, by: \.itemType)
@@ -48,6 +49,10 @@ class BuySellViewModel {
         } catch {
             errorMessage = error.localizedDescription
         }
+    }
+
+    func markAsSold(uid: String, txId: String, buyPrice: Double, sellPrice: Double, buyerName: String, dateSold: Date, soldDestinations: [FundingSource]) {
+        BuySellService.markAsSold(uid: uid, txId: txId, buyPrice: buyPrice, sellPrice: sellPrice, buyerName: buyerName, dateSold: dateSold, soldDestinations: soldDestinations)
     }
 
     func delete(uid: String, txId: String, fundingSources: [FundingSource]) async {

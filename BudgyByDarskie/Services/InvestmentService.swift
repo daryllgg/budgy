@@ -98,6 +98,52 @@ struct InvestmentService {
         ActivityLogService.log(uid: uid, type: .investment, action: .edit, description: "Updated investment: \(investment.stock)", amount: investment.amountPhp)
     }
 
+    static func tpsl(uid: String, exit: InvestmentExit) {
+        let batch = db.batch()
+
+        // Credit each destination wallet
+        for dest in exit.destinations {
+            let walletRef = db.collection("users").document(uid).collection("wallets").document(dest.sourceId)
+            batch.updateData([
+                "balance": FieldValue.increment(dest.amount),
+                "updatedAt": FieldValue.serverTimestamp()
+            ], forDocument: walletRef)
+        }
+
+        // Mark the investment as exited
+        let investmentRef = col(uid).document(exit.investmentId)
+        batch.updateData([
+            "exited": true,
+            "updatedAt": FieldValue.serverTimestamp()
+        ], forDocument: investmentRef)
+
+        // Store the exit record
+        let exitRef = db.collection("users").document(uid).collection("investmentExits").document()
+        let destData = exit.destinations.map { [
+            "sourceId": $0.sourceId,
+            "sourceName": $0.sourceName,
+            "amount": $0.amount
+        ] as [String: Any] }
+
+        batch.setData([
+            "investmentId": exit.investmentId,
+            "stock": exit.stock,
+            "investmentType": exit.investmentType.rawValue,
+            "amountInvested": exit.amountInvested,
+            "amountOut": exit.amountOut,
+            "profit": exit.profit,
+            "destinations": destData,
+            "date": Timestamp(date: exit.date),
+            "notes": exit.notes,
+            "year": exit.year,
+            "createdAt": FieldValue.serverTimestamp(),
+        ], forDocument: exitRef)
+
+        batch.commit(completion: nil)
+        let action = exit.profit >= 0 ? "TP" : "SL"
+        ActivityLogService.log(uid: uid, type: .investment, action: .edit, description: "\(action): \(exit.stock) → \(formatPhp(exit.amountOut))", amount: exit.amountOut)
+    }
+
     static func delete(uid: String, investmentId: String, sourceId: String, amountPhp: Double) async throws {
         let investmentRef = col(uid).document(investmentId)
 

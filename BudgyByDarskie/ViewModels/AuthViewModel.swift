@@ -29,4 +29,13 @@ class AuthViewModel {
             errorMessage = error.localizedDescription
         }
     }
+
+    func switchAccount() async {
+        errorMessage = nil
+        do {
+            try await auth.switchAccount()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
 }

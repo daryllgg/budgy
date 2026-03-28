@@ -49,62 +49,62 @@ struct WalletService {
         ActivityLogService.log(uid: uid, type: .wallet, action: .delete, description: "Deleted wallet")
     }
 
-    static func withdraw(uid: String, bankWalletId: String, cashWalletId: String, amount: Double, fee: Double, bankName: String) async throws {
-        let bankRef = col(uid).document(bankWalletId)
-        let cashRef = col(uid).document(cashWalletId)
+    static func transfer(uid: String, sourceWalletId: String, destWalletId: String, amount: Double, fee: Double, sourceName: String) async throws {
+        let sourceRef = col(uid).document(sourceWalletId)
+        let destRef = col(uid).document(destWalletId)
         let expenseCol = db.collection("users").document(uid).collection("expenses")
         let withdrawalCol = db.collection("users").document(uid).collection("withdrawals")
 
-        // Get cash wallet name
-        let cashDoc = try? await cashRef.getDocument()
-        let cashWalletName = cashDoc?.data()?["name"] as? String ?? "Cash"
+        // Get destination wallet name
+        let destDoc = try? await destRef.getDocument()
+        let destWalletName = destDoc?.data()?["name"] as? String ?? "Wallet"
 
         let batch = db.batch()
 
-        // Deduct amount + fee from bank
+        // Deduct amount + fee from source
         batch.updateData([
             "balance": FieldValue.increment(-(amount + fee)),
             "updatedAt": FieldValue.serverTimestamp()
-        ], forDocument: bankRef)
+        ], forDocument: sourceRef)
 
-        // Add amount to cash
+        // Add amount to destination
         batch.updateData([
             "balance": FieldValue.increment(amount),
             "updatedAt": FieldValue.serverTimestamp()
-        ], forDocument: cashRef)
+        ], forDocument: destRef)
 
         // Add fee as expense
         if fee > 0 {
             let expenseRef = expenseCol.document()
             batch.setData([
-                "description": "Transaction Fee",
+                "description": "Transfer Fee",
                 "amount": fee,
                 "date": Timestamp(date: Date()),
                 "category": ExpenseCategory.other.rawValue,
-                "sourceId": bankWalletId,
-                "sourceName": bankName,
-                "notes": "ATM/Bank withdrawal fee",
+                "sourceId": sourceWalletId,
+                "sourceName": sourceName,
+                "notes": "Transfer fee",
                 "year": CURRENT_YEAR,
                 "createdAt": FieldValue.serverTimestamp(),
                 "updatedAt": FieldValue.serverTimestamp(),
             ], forDocument: expenseRef)
         }
 
-        // Log withdrawal record
+        // Log transfer record (uses same withdrawals collection for backward compat)
         let withdrawalRef = withdrawalCol.document()
         batch.setData([
             "amount": amount,
             "fee": fee,
-            "bankWalletId": bankWalletId,
-            "bankWalletName": bankName,
-            "cashWalletId": cashWalletId,
-            "cashWalletName": cashWalletName,
+            "bankWalletId": sourceWalletId,
+            "bankWalletName": sourceName,
+            "cashWalletId": destWalletId,
+            "cashWalletName": destWalletName,
             "date": Timestamp(date: Date()),
             "year": CURRENT_YEAR,
             "createdAt": FieldValue.serverTimestamp(),
         ], forDocument: withdrawalRef)
 
         batch.commit(completion: nil)
-        ActivityLogService.log(uid: uid, type: .transfer, action: .add, description: "Withdrew \(formatPhp(amount)) from \(bankName)", amount: amount)
+        ActivityLogService.log(uid: uid, type: .transfer, action: .add, description: "Transferred \(formatPhp(amount)) from \(sourceName) to \(destWalletName)", amount: amount)
     }
 }

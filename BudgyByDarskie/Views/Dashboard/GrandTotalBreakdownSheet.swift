@@ -5,6 +5,7 @@ struct GrandTotalBreakdownSheet: View {
     let investmentTotal: Double
     let receivableTotal: Double
     let assetTotal: Double
+    let buySellInventory: Double
     let grandTotal: Double
 
     @Environment(\.dismiss) private var dismiss
@@ -18,6 +19,7 @@ struct GrandTotalBreakdownSheet: View {
                     row("Investments", investmentTotal)
                     row("Receivables", receivableTotal)
                     row("Assets", assetTotal)
+                    row("Buy & Sell Inventory", buySellInventory)
                     HStack {
                         Text("Grand Total")
                             .fontWeight(.bold)
