@@ -22,6 +22,7 @@
 		16A82C0097B9FDE90DED3E41 /* AssetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B49AF83AA30263A4F4F8B6 /* AssetsView.swift */; };
 		173A03EB00B99A3A213B730A /* WalletTransactionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41320821D8D3C5673788297 /* WalletTransactionViewModel.swift */; };
 		1B12A093CCFBD5B170CC03F6 /* ExpenseDetailSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69A820DB8F3F75E68A2E485 /* ExpenseDetailSheet.swift */; };
+		ZN1J2FCEFNAQ2R0IP9Y9V4ZH /* ExpenseExportSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7MEVBWK7C69B1DFYNTOL7VOZ /* ExpenseExportSheet.swift */; };
 		1C51A55E303B1685E02C0E3F /* DepositService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E003F4231A9B45B005F805C2 /* DepositService.swift */; };
 		1C85D409CE2D1864D459EDAA /* ExpenseSummaryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492DAD9A624BE9B8D4404F09 /* ExpenseSummaryCard.swift */; };
 		1D5978D5A1D69911AF592D55 /* ExpenseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851217974A42355C4CCE6813 /* ExpenseViewModel.swift */; };
@@ -89,6 +90,7 @@
 		9EFD435B338EB7BA449969AB /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D716398224779A3D7EEB95EC /* AuthViewModel.swift */; };
 		A06CCD2C13F861A143CC11C3 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06CE523DEF0B69EF414D967B /* NotificationManager.swift */; };
 		A14AD688F42490E9C9EA52F4 /* PaymentHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E690F350B356009BB137CD9 /* PaymentHistoryView.swift */; };
+		B1C2D3E4F5A6B7C8D9E0F1A2 /* BulkPaymentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2D3E4F5A6B7C8D9E0F1A2B3 /* BulkPaymentSheet.swift */; };
 		A2AB145FDC3EDC9C8AEBBC62 /* InvestmentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC706064189AD618F1E28F4F /* InvestmentsView.swift */; };
 		A3D46D645E7513EC23CDF9D9 /* Expense.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2391563C77B83004E0CB6C3 /* Expense.swift */; };
 		A526425E11FA1DB9EFD2533F /* GrandTotalBreakdownSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DD5AB6576D2B36C0DA63093 /* GrandTotalBreakdownSheet.swift */; };
@@ -221,6 +223,7 @@
 		8DD5AB6576D2B36C0DA63093 /* GrandTotalBreakdownSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrandTotalBreakdownSheet.swift; sourceTree = "<group>"; };
 		8E4E074290C1B4BBC935E962 /* InvestmentAnalyticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentAnalyticsView.swift; sourceTree = "<group>"; };
 		8E690F350B356009BB137CD9 /* PaymentHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentHistoryView.swift; sourceTree = "<group>"; };
+		C2D3E4F5A6B7C8D9E0F1A2B3 /* BulkPaymentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkPaymentSheet.swift; sourceTree = "<group>"; };
 		906B010F7C23AD7063BCB3BA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		90DE2FF035DCBAE9BDF3C13F /* ActivityLogService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityLogService.swift; sourceTree = "<group>"; };
 		91F3E367F1993560ADB83655 /* WatchlistService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchlistService.swift; sourceTree = "<group>"; };
@@ -255,6 +258,7 @@
 		D40C5A2C254C68BCAE41FB59 /* EmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateView.swift; sourceTree = "<group>"; };
 		D41320821D8D3C5673788297 /* WalletTransactionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletTransactionViewModel.swift; sourceTree = "<group>"; };
 		D69A820DB8F3F75E68A2E485 /* ExpenseDetailSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseDetailSheet.swift; sourceTree = "<group>"; };
+		7MEVBWK7C69B1DFYNTOL7VOZ /* ExpenseExportSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseExportSheet.swift; sourceTree = "<group>"; };
 		D716398224779A3D7EEB95EC /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		D9CAC432C6A59141E3A63920 /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
 		DC6702824F7E937EF6C67A62 /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
@@ -295,6 +299,7 @@
 		06F432ADFBCB6029AC1727CA /* Receivables */ = {
 			isa = PBXGroup;
 			children = (
+				C2D3E4F5A6B7C8D9E0F1A2B3 /* BulkPaymentSheet.swift */,
 				8E690F350B356009BB137CD9 /* PaymentHistoryView.swift */,
 				F46AE004038C414E3D6AFAEA /* PersonReceivablesView.swift */,
 				357E92B2B73D1666B3EFFDB9 /* ReceivableFormSheet.swift */,
@@ -462,6 +467,7 @@
 			isa = PBXGroup;
 			children = (
 				D69A820DB8F3F75E68A2E485 /* ExpenseDetailSheet.swift */,
+				7MEVBWK7C69B1DFYNTOL7VOZ /* ExpenseExportSheet.swift */,
 				1B4708E91975B8E95B21613B /* ExpenseFormSheet.swift */,
 				E237C66C6D90AFAD584D7E47 /* ExpenseRow.swift */,
 				ACC4A227EE3BFF457C22D5AB /* ExpensesView.swift */,
@@ -747,6 +753,7 @@
 				A3D46D645E7513EC23CDF9D9 /* Expense.swift in Sources */,
 				243B5D627AC85FBCBB4090D3 /* ExpenseAnalyticsView.swift in Sources */,
 				1B12A093CCFBD5B170CC03F6 /* ExpenseDetailSheet.swift in Sources */,
+				ZN1J2FCEFNAQ2R0IP9Y9V4ZH /* ExpenseExportSheet.swift in Sources */,
 				BDDC9037F9566AB89354BF4A /* ExpenseFormSheet.swift in Sources */,
 				370E2B315E551642C4F8C904 /* ExpenseRow.swift in Sources */,
 				RC5CA01E2A1B3D4F00A1B2C3 /* ReceiptScannerView.swift in Sources */,
@@ -774,6 +781,7 @@
 				A06CCD2C13F861A143CC11C3 /* NotificationManager.swift in Sources */,
 				34EF97D84A9D16FA11EDC600 /* OverallAnalyticsView.swift in Sources */,
 				A14AD688F42490E9C9EA52F4 /* PaymentHistoryView.swift in Sources */,
+				B1C2D3E4F5A6B7C8D9E0F1A2 /* BulkPaymentSheet.swift in Sources */,
 				C40E1FCB7784F3CBC38FA721 /* PersonReceivablesView.swift in Sources */,
 				0974732D5E88B017DC642BD5 /* PortfolioSummaryCards.swift in Sources */,
 				95FF6F0769179C184792BED4 /* ProfitAllocation.swift in Sources */,
